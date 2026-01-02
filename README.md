@@ -177,7 +177,7 @@ google.script.run
 
 👤 Autor
 
-Desarrollado por Lucas BarrionUEVO
+Desarrollado por Lucas Barrionuevo
 Proyecto de automatización – Gestión de inventario
 
 🧩 Licencia
