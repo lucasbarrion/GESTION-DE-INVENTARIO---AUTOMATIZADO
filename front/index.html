@@ -1186,10 +1186,7 @@ function cargarInventario() {
     .getInventario();
 }
 
-/* =====================
-   BUSCAR PRODUCTOS
-   (FRONTEND MOCK)
-===================== */
+
 function buscarProductos(){
   const input = document.getElementById('buscarInput');
   const tabla = document.getElementById('tablaBuscar');
@@ -1323,7 +1320,21 @@ function cargarDashboard(){
       setText('k_costoVentaMes', fmtMoney(data.costoVentaMes));
       setText('k_utilidadBrutaMes', fmtMoney(data.utilidadBrutaMes));
 
-      setText('k_margenBruto', fmtPct(data.margenBruto));
+     const margen = Number(data.margenBruto || 0);
+const elMargen = document.getElementById('k_margenBruto');
+
+if (elMargen) {
+  elMargen.textContent = fmtPct(margen);
+
+  if (margen > 0) {
+    elMargen.style.color = '#16a34a'; // VERDE
+  } else if (margen < 0) {
+    elMargen.style.color = '#dc2626'; // ROJO
+  } else {
+    elMargen.style.color = '#6b7280'; // GRIS
+  }
+}
+
       setText('a_ingresos', fmtMoney(data.ingresosMes));
       setText('a_costos', fmtMoney(data.costoVentaMes));
       setText('a_utilidad', fmtMoney(data.utilidadBrutaMes));
