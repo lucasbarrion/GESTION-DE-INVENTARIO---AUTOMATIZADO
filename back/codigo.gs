@@ -1,14 +1,13 @@
-/************ CONFIG ************/
 const CONFIG = {
   SHEET_PRODUCTOS: 'Productos',
   SHEET_MOVIMIENTOS: 'MOVIMIENTOS',
   SHEET_GASTOS: 'GASTOS PROOVEDOR',
   CATEGORIAS: ['Mate', 'Bombilla', 'Yerba', 'Accesorio'],
-  LOGO_FILE_ID: '1bPzsc-do1sg7PNJJ0sy7EZyITI1P7uUq',
+  LOGO_FILE_ID: '1hFfH5zLT2I9mnAWrsMxeul3xOweaQo8FJGn11SIlQWE',
   STOCK_BAJO_UMBRAL: 3
 };
 
-/************ WEB APP ************/
+
 function doGet() {
   return HtmlService.createHtmlOutputFromFile('index')
     .setTitle('IDOS DEL MATE SYSTEM')
@@ -59,7 +58,6 @@ function crearHojasSistema() {
   return { ok: true };
 }
 
-/************ PRODUCTOS ************/
 function agregarProducto(p) {
   validarTexto(p?.id, 'ID_PRODUCTO');
   validarTexto(p?.nombre, 'NOMBRE');
@@ -94,7 +92,7 @@ function agregarProducto(p) {
 
   return { ok: true };
 }
-/************ ACTUALIZAR COSTO PRODUCTO ************/
+
 function actualizarCosto(data) {
   if (!data) throw new Error('Datos inexistentes');
 
@@ -127,7 +125,7 @@ function actualizarCosto(data) {
   throw new Error('Producto no encontrado');
 }
 
-/************ GUARDAR MOVIMIENTO ************/
+
 function guardarMovimiento(m) {
   if (!m) throw new Error('Datos de movimiento inexistentes');
 
@@ -153,23 +151,23 @@ function guardarMovimiento(m) {
   fecha.setHours(0, 0, 0, 0);
 
   sh.appendRow([
-    'MOV-' + Date.now(),   // ID_MOVIMIENTO
-    fecha,                // FECHA
-    m.mate || '',          // MATE (ID_PRODUCTO)
-    m.bombilla || '',      // BOMBILLA
-    m.yerba || '',         // YERBA
-    m.accesorio || '',     // ACCESORIO
-    m.grabado || 'NO',     // GRABADO
-    m.tipo || '',          // TIPO
-    Number(m.monto),       // MONTO
-    m.obs || '',           // OBS
-    m.persona              // PERSONA
+    'MOV-' + Date.now(),  
+    fecha,                
+    m.mate || '',          
+    m.bombilla || '',      
+    m.yerba || '',         
+    m.accesorio || '',     
+    m.grabado || 'NO',     
+    m.tipo || '',          
+    Number(m.monto),       
+    m.obs || '',           
+    m.persona             
   ]);
 
   return { ok: true };
 }
 
-/************ AJUSTAR STOCK ************/
+
 function ajustarStock(data) {
   if (!data || !data.idProducto) {
     throw new Error('Producto obligatorio');
@@ -209,8 +207,7 @@ function ajustarStock(data) {
   throw new Error('Producto no encontrado');
 }
 
-/************ GASTOS ************/
-/************ GASTOS PROOVEDOR ************/
+
 function registrarGasto(g) {
   if (!g) throw new Error('Datos de gasto inexistentes');
 
@@ -223,7 +220,7 @@ function registrarGasto(g) {
     throw new Error('MONTO inválido');
   }
 
-  const ss = SpreadsheetApp.getActive(); // ✅ DEFINIDO
+  const ss = SpreadsheetApp.getActive(); 
   const sh = asegurarHoja(
     CONFIG.SHEET_GASTOS,
     ['FECHA', 'MONTO'],
@@ -233,7 +230,7 @@ function registrarGasto(g) {
   const fecha = new Date(g.fecha);
   fecha.setHours(0, 0, 0, 0);
 
-  // 👉 SIEMPRE NEGATIVO
+  
   sh.appendRow([
     fecha,
     -Math.abs(monto)
@@ -274,23 +271,17 @@ function getDashboardData(filtro) {
   const shM = ss.getSheetByName(CONFIG.SHEET_MOVIMIENTOS);
   const shG = ss.getSheetByName(CONFIG.SHEET_GASTOS);
 
-  /* =========================
-     PRODUCTOS
-  ========================= */
+
   const productos = shP && shP.getLastRow() >= 2
     ? shP.getRange(2, 1, shP.getLastRow() - 1, 5).getValues()
     : [];
 
-  /* =========================
-     MOVIMIENTOS
-  ========================= */
+
   const movimientos = shM && shM.getLastRow() >= 2
     ? shM.getRange(2, 1, shM.getLastRow() - 1, 11).getValues()
     : [];
 
-  /* =========================
-     INVENTARIO (INFO)
-  ========================= */
+  
   let valorInventario = 0;
   let sinStock = 0;
   let stockBajo = 0;
@@ -305,9 +296,7 @@ function getDashboardData(filtro) {
     if (stock > 0 && stock <= CONFIG.STOCK_BAJO_UMBRAL) stockBajo++;
   });
 
-  /* =========================
-     INGRESOS / EGRESOS
-  ========================= */
+ 
   let ingresosMes = 0;
   let egresosMovimientos = 0;
   let movimientosFiltrados = 0;
@@ -326,10 +315,6 @@ function getDashboardData(filtro) {
     if (tipo === 'Egreso') egresosMovimientos += monto;
   });
 
-  /* =========================
-     COSTO DE VENTAS
-     (GASTOS PROOVEDOR + EGRESOS)
-  ========================= */
   const gastos = shG && shG.getLastRow() >= 2
     ? shG.getRange(2, 1, shG.getLastRow() - 1, 2).getValues()
     : [];
@@ -342,15 +327,13 @@ function getDashboardData(filtro) {
     if (hasta && fecha > hasta) return;
 
     const monto = Number(r[1] || 0);
-    costoVentaMes += Math.abs(monto); // gastos vienen negativos
+    costoVentaMes += Math.abs(monto); 
   });
 
-  // sumar egresos cargados como movimientos
+
   costoVentaMes += egresosMovimientos;
 
-  /* =========================
-     UTILIDAD Y MARGEN
-  ========================= */
+ 
   const utilidadBrutaMes = ingresosMes - costoVentaMes;
   const margenBruto = ingresosMes > 0
     ? (utilidadBrutaMes / ingresosMes) * 100
@@ -373,11 +356,10 @@ function getDashboardData(filtro) {
 }
 
 
-/************ OBTENER MOVIMIENTOS (BACKEND) ************/
-/************ OBTENER MOVIMIENTOS (BACKEND) ************/
+
 function getMovimientos(filtro) {
 Logger.log('🔥🔥🔥 ENTRE A getMovimientos 🔥🔥🔥');
-  filtro = filtro || {}; // 🔥 FIX CRÍTICO
+  filtro = filtro || {}; // 
 
   Logger.log('getMovimientos llamado');
   Logger.log(JSON.stringify(filtro));
@@ -507,6 +489,28 @@ function getInventario() {
   }));
 }
 
+function getAlertasStock() {
+  const sh = SpreadsheetApp
+    .getActive()
+    .getSheetByName(CONFIG.SHEET_PRODUCTOS);
+
+  if (!sh || sh.getLastRow() < 2) return [];
+
+  const data = sh.getRange(2, 1, sh.getLastRow() - 1, 5).getValues();
+
+  return data
+    .map(r => ({
+      id: r[0],
+      nombre: r[1],
+      categoria: r[2],
+      stock: Number(r[3] || 0),
+      costo: Number(r[4] || 0)
+    }))
+    .filter(p =>
+      p.stock === 0 ||
+      p.stock <= CONFIG.STOCK_BAJO_UMBRAL
+    );
+}
 
 
 function buscarProductosBackend(texto) {
@@ -534,11 +538,32 @@ function buscarProductosBackend(texto) {
     }));
 }
 
+function getInventarioSoloAlertas() {
+  const sh = SpreadsheetApp
+    .getActive()
+    .getSheetByName(CONFIG.SHEET_PRODUCTOS);
+
+  if (!sh || sh.getLastRow() < 2) return [];
+
+  const data = sh.getRange(2, 1, sh.getLastRow() - 1, 5).getValues();
+
+  return data
+    .map(r => ({
+      id: r[0],
+      nombre: r[1],
+      categoria: r[2],
+      stock: Number(r[3] || 0),
+      costo: Number(r[4] || 0)
+    }))
+    .filter(p =>
+      p.stock === 0 ||
+      p.stock <= CONFIG.STOCK_BAJO_UMBRAL
+    );
+}
 
 
 
 
-/************ VALIDADORES ************/
 function validarTexto(v,campo){
   if (!v || String(v).trim()==='') throw new Error(`${campo} obligatorio`);
 }
