@@ -57,6 +57,78 @@ function crearHojasSistema() {
 
   return { ok: true };
 }
+function formatearEncabezadosSistema() {
+  const ss = SpreadsheetApp.getActive();
+
+  const CONFIG_ENCABEZADOS = [
+    {
+      hoja: 'Productos',
+      rango: 'A1:E1'
+    },
+    {
+      hoja: 'MOVIMIENTOS',
+      rango: 'A1:K1'
+    },
+    {
+      hoja: 'GASTOS PROOVEDOR',
+      rango: 'A1:B1'
+    }
+  ];
+
+  CONFIG_ENCABEZADOS.forEach(cfg => {
+    const sh = ss.getSheetByName(cfg.hoja);
+    if (!sh) return;
+
+    const header = sh.getRange(cfg.rango);
+
+    header
+      .setBackground('#2ecc71')   // verde atractivo (no chillón)
+      .setFontColor('#ffffff')    // blanco
+      .setFontWeight('bold')
+      .setHorizontalAlignment('center')
+      .setVerticalAlignment('middle')
+      .setBorder(true, true, true, true, true, true);
+
+    sh.setRowHeight(1, 34);
+  });
+}
+
+
+function aplicarFormatoStock() {
+  const sh = SpreadsheetApp.getActive().getSheetByName('Productos');
+  if (!sh) throw new Error('No existe la hoja Productos');
+
+  const rangoStock = sh.getRange('D2:D'); // STOCK
+
+  const reglas = [
+
+    // 🔴 0, 1 o 2 → ROJO
+    SpreadsheetApp.newConditionalFormatRule()
+      .whenNumberLessThanOrEqualTo(2)
+      .setBackground('#dc2626')
+      .setFontColor('#ffffff')
+      .setRanges([rangoStock])
+      .build(),
+
+    // 🟠 3 o 4 → NARANJA
+    SpreadsheetApp.newConditionalFormatRule()
+      .whenNumberBetween(3, 4)
+      .setBackground('#f59e0b')
+      .setFontColor('#000000')
+      .setRanges([rangoStock])
+      .build(),
+
+    // 🟢 5 o más → VERDE
+    SpreadsheetApp.newConditionalFormatRule()
+      .whenNumberGreaterThanOrEqualTo(5)
+      .setBackground('#16a34a')
+      .setFontColor('#ffffff')
+      .setRanges([rangoStock])
+      .build()
+  ];
+
+  sh.setConditionalFormatRules(reglas);
+}
 
 function agregarProducto(p) {
   validarTexto(p?.id, 'ID_PRODUCTO');
