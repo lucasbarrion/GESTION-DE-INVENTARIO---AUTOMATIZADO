@@ -1,0 +1,1467 @@
+<!DOCTYPE html>  
+<html>
+<head>
+  <base target="_top" />
+  <meta charset="utf-8" />
+
+  <style>
+    :root{
+      --brand:#667047;
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --border:#e6e9ee;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --radius:8px;
+    }
+
+    *{ box-sizing:border-box }
+
+    body{
+      margin:0;
+      font-family: Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    .layout{
+      display:flex;
+      min-height:100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar{
+      width:300px;
+      background:var(--brand);
+      color:#fff;
+      padding:22px 18px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    .brand{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      margin-top:6px;
+    }
+
+    .logo{
+      width:150px;
+      height:auto;
+      display:block;
+    }
+
+    /* texto abajo */
+    .brand-title{
+      margin-top:auto;
+      text-align:center;
+      font-size:14px;
+      letter-spacing:.8px;
+      font-weight:800;
+      text-transform:uppercase;
+      line-height:1.2;
+      padding-top:10px;
+    }
+
+    .menu{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:6px;
+    }
+
+    .menu a{
+      color:#fff;
+      text-decoration:none;
+      font-size:15px;
+      font-weight:bold;
+      padding:12px;
+      border-radius:6px;
+      cursor:pointer;
+      letter-spacing:0.4px; 
+    }
+
+    .menu a.active,
+    .menu a:hover{
+      background:rgba(255,255,255,.15);
+    }
+
+    .content{
+  flex:1;
+  padding:22px;
+  max-width:1400px;   /* 👈 AGREGAR */
+  margin:0 auto;
+}
+
+
+  .card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px;
+
+  width:100%;        /* 👈 CLAVE */
+  max-width:none;    /* 👈 CLAVE */
+  margin:0 0 20px 0; /* 👈 NO CENTRADO */
+
+  box-shadow:0 1px 2px rgba(0,0,0,.04);
+}
+
+
+
+    .card h3{
+      margin:0 0 16px 0;
+      font-size:14px;
+    }
+
+    /* FORMS */
+    .form-grid-3{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:14px;
+    }
+
+    .form-grid-1{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+    }
+
+    .form-group label{
+      display:block;
+      font-size:14px;
+      font-weight:600;
+      color:var(--brand);
+      margin-bottom:6px;
+    }
+
+    input, select, textarea{
+      width:100%;
+      height:44px;
+      padding:12px;
+      font-size:15px;
+      border:1px solid #cfd6df;
+      border-radius:8px;
+    }
+
+    textarea{
+      height:110px;
+      resize:vertical;
+    }
+
+    .actions{
+      margin-top:16px;
+    }
+
+   button{
+  background:var(--brand);
+  color:#fff;
+  border:none;
+
+  height:44px;              
+  padding:0 20px;          
+  border-radius:8px;        
+
+  font-size:14px;           
+  font-weight:600;          
+
+  cursor:pointer;
+}
+
+
+    button:hover{ filter:brightness(.95); }
+
+    .hint{ font-size:12px; color:var(--muted); margin-top:8px }
+    .error{ font-size:12px; color:#b91c1c; font-weight:bold; margin-top:8px }
+    .ok{ font-size:12px; color:#047857; font-weight:bold; margin-top:8px }
+
+    /* ===============================
+   DASHBOARD – MEJORA VISUAL
+   =============================== */
+
+/* ===============================
+   DASHBOARD FULL WIDTH
+   =============================== */
+
+#dashboard{
+  width:100%;
+  max-width:none;
+  padding:24px;
+}
+
+/* GRID PRINCIPAL DE KPIs */
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(180px,1fr));
+  gap:18px;
+  margin-bottom:32px;
+}
+
+.kpi{
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:22px 16px;
+  min-height:110px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  box-shadow:0 4px 10px rgba(0,0,0,.06);
+  transition:.15s ease;
+}
+
+.kpi:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 22px rgba(0,0,0,.10);
+}
+
+.kpi strong{
+  font-size:28px;
+  font-weight:900;
+  color:#667047;
+}
+
+.kpi span{
+  margin-top:8px;
+  font-size:12px;
+  font-weight:700;
+  color:#667047;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+
+/* colores semánticos (solo números) */
+.kpi.success strong{ color:#16a34a; }
+.kpi.warning strong{ color:#f59e0b; }
+.kpi.danger strong{ color:#dc2626; }
+.kpi.info strong{ color:#667047; } /* ← antes azul */
+
+/* BLOQUES GRANDES */
+.dash-panel{
+  background:#f0f8ff;
+  border-radius:16px;
+  padding:24px;
+  margin-bottom:28px;
+}
+
+.dash-panel-title{
+  font-size:14px;
+  font-weight:800;
+  color:#667047; /* ← antes azul */
+  margin-bottom:18px;
+}
+
+/* ANÁLISIS */
+.analysis-grid{
+  display:grid;
+  grid-template-columns:1.2fr 2fr 2fr;
+  gap:20px;
+}
+
+.analysis-card{
+  background:#ffffff;
+  border-radius:14px;
+  padding:20px;
+  box-shadow:0 4px 10px rgba(0,0,0,.06);
+}
+
+.analysis-card h4{
+  font-size:13px;
+  font-weight:800;
+  color:#667047; /* ← antes azul */
+  margin-bottom:12px;
+}
+
+.analysis-card p,
+.analysis-card strong{
+  color:#667047;
+}
+
+.big-number{
+  font-size:42px;
+  font-weight:900;
+  color:#dc2626;
+}
+
+/* BOTONES */
+.dash-actions{
+  display:flex;
+  gap:14px;
+}
+
+.btn-primary{
+  background:#667047;   /* ← antes azul */
+  color:#ffffff;
+  border-radius:10px;
+}
+
+.btn-warning{
+  background:#facc15;
+  color:#111827;
+  border-radius:10px;
+}
+
+/* RESPONSIVE */
+@media (max-width:1024px){
+  .analysis-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+thead th {
+  padding: 12px 10px;
+  text-align: left;
+  font-size: 12px;
+  color: #374151;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+tbody td {
+  padding: 14px 10px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13px;
+}
+
+tbody tr:first-child td {
+  padding-top: 18px; /* 🔥 separación clave */
+} 
+
+    
+  </style>
+</head>
+
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="brand">
+      <img
+        id="logo"
+        class="logo"
+        alt="idos del mate"
+        src="https://drive.google.com/thumbnail?id=1bPzsc-do1sg7PNJJ0sy7EZyITI1P7uUq&sz=w500"
+      />
+    </div>
+
+    <nav class="menu">
+  <a id="mDashboard" onclick="mostrar('dashboard')">Dashboard</a>
+  <a id="mProductos" class="active" onclick="mostrar('productos')">Nuevo producto</a>
+  <a id="mMovimientos" onclick="mostrar('movimientos')">Movimientos</a>
+  <a id="mReportes" onclick="mostrar('reportes')">Reportes</a>
+  <a id="mInventario" onclick="mostrar('inventario')">Inventario Valorizado</a>
+  <a id="mBuscar" onclick="mostrar('buscar')">Buscar</a>
+</nav>
+
+
+    <div class="brand-title">IDOS DEL MATE SYSTEM</div>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+ <section id="dashboard" class="card" style="display:none;">
+  <h3>Dashboard General</h3>
+
+  <div class="dash-panel" style="margin-bottom:24px;">
+  <div class="dash-panel-title">Filtro de fechas</div>
+
+  <div class="form-grid-3">
+    <div class="form-group">
+      <label>Desde</label>
+      <input type="date" id="dashDesde">
+    </div>
+
+    <div class="form-group">
+      <label>Hasta</label>
+      <input type="date" id="dashHasta">
+    </div>
+
+    <div class="form-group" style="display:flex; align-items:flex-end;">
+      <button onclick="cargarDashboard()">Aplicar filtro</button>
+    </div>
+  </div>
+</div>
+
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <strong id="k_totalProductos">0</strong>
+      <span>Total Productos</span>
+    </div>
+
+    <div class="kpi">
+      <strong id="k_totalMovimientos">0</strong>
+      <span>Total Movimientos</span>
+    </div>
+
+    <div class="kpi warning">
+      <strong id="k_sinStock">0</strong>
+      <span>Sin Stock</span>
+    </div>
+
+    <div class="kpi warning">
+      <strong id="k_stockBajo">0</strong>
+      <span>Stock Bajo</span>
+    </div>
+
+    <div class="kpi success">
+      <strong id="k_valorInventario">$ 0.00</strong>
+      <span>Valor Total Inventario</span>
+    </div>
+
+    <div class="kpi success">
+      <strong id="k_ingresosMes">$ 0.00</strong>
+      <span>Ingresos Mes</span>
+    </div>
+
+    <div class="kpi danger">
+      <strong id="k_costoVentaMes">$ 0.00</strong>
+      <span>Costo Venta Mes</span>
+    </div>
+
+    <div class="kpi info">
+      <strong id="k_utilidadBrutaMes">$ 0.00</strong>
+      <span>Utilidad Bruta Mes</span>
+    </div>
+  </div>
+
+  <!-- ANÁLISIS -->
+  <div class="dash-panel">
+    <div class="dash-panel-title">Análisis Financiero del Mes</div>
+
+    <div class="analysis-grid">
+      <div class="analysis-card">
+        <h4>Margen Bruto</h4>
+        <div class="big-number" id="k_margenBruto">0%</div>
+      </div>
+
+      <div class="analysis-card">
+        <h4>Análisis del Período</h4>
+        <p>Ingresos: <strong id="a_ingresos">$ 0.00</strong></p>
+        <p>Costos: <strong id="a_costos">$ 0.00</strong></p>
+        <p>Utilidad: <strong id="a_utilidad">$ 0.00</strong></p>
+      </div>
+
+      <div class="analysis-card">
+        <h4>Inventario</h4>
+        <p>Valor Total: <strong id="a_valor">$ 0.00</strong></p>
+        <p>Productos: <strong id="a_productos">0</strong></p>
+        <p>Movimientos: <strong id="a_movimientos">0</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCIONES -->
+  <div class="dash-panel">
+    <div class="dash-panel-title">Alertas de Stock</div>
+
+    <div class="dash-actions">
+      <button class="btn-primary" onclick="cargarDashboard()">Actualizar Dashboard</button>
+      <button class="btn-warning">Ver Alertas de Stock</button>
+    </div>
+
+    <div id="msgDash" class="hint"></div>
+  </div>
+</section>
+
+
+
+<!-- PRODUCTOS -->
+<section id="productos" class="card">
+  <h3>Agregar Producto</h3>
+
+  <div class="form-grid-3">
+    <div class="form-group">
+      <label>ID</label>
+      <input id="p_id" placeholder="Ej: MATE-001">
+    </div>
+
+    <div class="form-group">
+      <label>Nombre</label>
+      <input id="p_nombre">
+    </div>
+
+    <div class="form-group">
+      <label>Categoría</label>
+      <select id="p_categoria">
+        <option value="">Seleccionar</option>
+        <option>Mate</option>
+        <option>Bombilla</option>
+        <option>Yerba</option>
+        <option>Accesorio</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-grid-3" style="margin-top:14px; align-items:flex-end;">
+    <div class="form-group">
+      <label>Costo unitario</label>
+      <input
+        id="p_costo"
+        type="number"
+        min="0"
+        step="0.01"
+        placeholder="Ej: 1500"
+      >
+    </div>
+
+    <div></div>
+
+    <div class="form-group" style="display:flex; justify-content:flex-end;">
+      <button onclick="guardarProducto()">Guardar Producto</button>
+    </div>
+  </div>
+
+  <div id="msgProd" class="hint"></div>
+
+  <hr style="margin:28px 0; border:none; border-top:1px solid var(--border);">
+
+  <!-- ACTUALIZAR COSTO -->
+  <h3>Actualizar costo de producto</h3>
+
+  <div class="form-grid-3">
+    <div class="form-group">
+      <label>Producto</label>
+      <select id="c_producto">
+        <option value="">Seleccionar</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Nuevo costo unitario</label>
+      <input
+        id="c_nuevoCosto"
+        type="number"
+        min="0"
+        step="0.01"
+        placeholder="Ej: 1800"
+      >
+    </div>
+
+    <div class="form-group" style="display:flex; align-items:flex-end;">
+      <button onclick="actualizarCosto()">Actualizar costo</button>
+    </div>
+  </div>
+
+  <div id="msgCosto" class="hint"></div>
+</section>
+
+
+
+    <!-- MOVIMIENTOS -->
+    <section id="movimientos" class="card" style="display:none;">
+      <h3>Nuevo Movimiento</h3>
+
+      <div class="form-grid-3">
+        <div class="form-group">
+          <label>Fecha</label>
+          <input id="m_fecha" type="date">
+        </div>
+
+        <div class="form-group">
+          <label>Mate</label>
+          <select id="m_mate"><option value="">(vacío)</option></select>
+        </div>
+
+        <div class="form-group">
+          <label>Bombilla</label>
+          <select id="m_bombilla"><option value="">(vacío)</option></select>
+        </div>
+      </div>
+
+      <div class="form-grid-3" style="margin-top:14px;">
+        <div class="form-group">
+          <label>Yerba</label>
+          <select id="m_yerba"><option value="">(vacío)</option></select>
+        </div>
+
+        <div class="form-group">
+          <label>Accesorio</label>
+          <select id="m_accesorio"><option value="">(vacío)</option></select>
+        </div>
+
+        <div class="form-group">
+          <label>Grabado</label>
+          <select id="m_grabado">
+            <option>NO</option>
+            <option>SI</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid-3" style="margin-top:14px;">
+        <div class="form-group">
+          <label>Tipo de movimiento</label>
+          <select id="m_tipo">
+            <option>Ingreso</option>
+            <option>Egreso</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Monto *</label>
+          <input id="m_monto" type="number" min="1">
+        </div>
+
+        <div class="form-group">
+          <label>Persona *</label>
+          <input id="m_persona">
+        </div>
+      </div>
+
+      <div class="form-grid-1" style="margin-top:14px;">
+        <div class="form-group">
+          <label>Observaciones</label>
+          <textarea id="m_obs"></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button onclick="guardarMovimiento()">Guardar Movimiento</button>
+      </div>
+
+      <div id="msgMov" class="hint"></div>
+
+      <!-- AJUSTAR STOCK (SOLO ACÁ) -->
+      <div style="margin-top:24px; padding-top:18px; border-top:1px solid var(--border);">
+        <h3 style="margin:0 0 16px 0;">Ajustar Stock</h3>
+
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label>Producto</label>
+            <select id="s_producto"><option value="">Seleccionar</option></select>
+          </div>
+
+          <div class="form-group">
+            <label>Cantidad (+ / -)</label>
+            <input id="s_cantidad" type="number" step="1" placeholder="Ej: 5 o -2">
+          </div>
+
+          <div class="form-group" style="display:flex; align-items:flex-end;">
+            <button onclick="ajustarStock()">Aplicar ajuste</button>
+          </div>
+        </div>
+
+        <div id="msgStock" class="hint"></div>
+      </div>
+    
+
+     <!-- REGISTRAR GASTO -->
+<div style="margin-top:24px; padding-top:18px; border-top:1px solid var(--border);">
+  <h3 style="margin:0 0 16px 0;">Registrar Gasto PROOVEDOR</h3>
+
+  <div class="form-grid-3">
+    <div class="form-group">
+      <label>Fecha</label>
+      <input id="g_fecha" type="date">
+    </div>
+
+    <div class="form-group">
+      <label>Monto del gasto</label>
+      <input
+        id="g_monto"
+        type="number"
+        min="0"
+        step="0.01"
+        placeholder="Ej: 25000"
+      >
+    </div>
+
+    <div class="form-group" style="display:flex; align-items:flex-end;">
+      <button onclick="registrarGasto()">Guardar Gasto</button>
+    </div>
+  </div>
+
+  <div id="msgGasto" class="hint"></div>
+</div>
+</section>
+
+ <!-- REPORTES -->
+<section id="reportes" class="card" style="display:none;">
+  <h3>Historial de Movimientos</h3>
+
+  <div class="card" style="background:#f8fafc;">
+
+    <div class="form-grid-3">
+      <div class="form-group">
+        <label>Fecha Desde</label>
+        <input id="fechaDesde" type="date">
+      </div>
+
+      <div class="form-group">
+        <label>Fecha Hasta</label>
+        <input id="fechaHasta" type="date">
+      </div>
+
+      <div class="form-group">
+        <label>Persona</label>
+        <input id="filtroPersona">
+      </div>
+    </div>
+
+    <div class="form-grid-3" style="margin-top:14px;">
+      <div class="form-group">
+        <label>Mate</label>
+        <input id="filtroMate">
+      </div>
+
+      <div class="form-group">
+        <label>Bombilla</label>
+        <input id="filtroBombilla">
+      </div>
+
+      <div class="form-group">
+        <label>Yerba</label>
+        <input id="filtroYerba">
+      </div>
+    </div>
+
+    <div class="form-grid-3" style="margin-top:14px;">
+      <div class="form-group">
+        <label>Accesorio</label>
+        <input id="filtroAccesorio">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button onclick="mostrarHistorial()">Generar Reporte</button>
+      <button class="btn-warning" onclick="exportarReporte()">Exportar</button>
+    </div>
+
+    <div id="msgReporte" class="hint"></div>
+  </div>
+
+  <div class="card">
+    <div id="historialResumen" class="hint">No hay datos cargados.</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Mate</th>
+          <th>Bombilla</th>
+          <th>Yerba</th>
+          <th>Accesorio</th>
+          <th>Grabado</th>
+          <th>Tipo</th>
+          <th>Monto</th>
+          <th>Obs</th>
+          <th>Persona</th>
+        </tr>
+      </thead>
+      <tbody id="historialTable"></tbody>
+    </table>
+  </div>
+</section>
+
+
+
+      
+    <!-- INVENTARIO VALORIZADO -->
+<section id="inventario" class="card" style="display:none;">
+  <h3>Inventario Valorizado</h3>
+
+  <div class="card" style="background:#f8fafc;">
+    <h4>Stock y Valorización</h4>
+
+    <div class="actions">
+      <button onclick="cargarInventario()">Actualizar Inventario</button>
+      <button class="btn-warning" disabled>Exportar CSV</button>
+      <button disabled>Solo Alertas</button>
+    </div>
+
+    <div id="invResumen" class="hint" style="margin-top:14px;">
+      No hay productos cargados.
+    </div>
+  </div>
+
+  <div class="card">
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Categoría</th>
+          <th>Stock</th>
+          <th>Costo Unit.</th>
+        </tr>
+      </thead>
+      <tbody id="tablaInventario">
+        <!-- VACÍO -->
+      </tbody>
+    </table>
+  </div>
+</section>
+<!-- BUSCAR -->
+<section id="buscar" class="card" style="display:none;">
+  <h3>Búsqueda de Productos</h3>
+
+  <div class="card" style="background:#f8fafc;">
+    <h4>Buscar Productos</h4>
+
+    <div class="form-grid-1">
+      <div class="form-group">
+        <label>Buscar por código, nombre o grupo</label>
+        <input
+          id="buscarInput"
+          type="text"
+          placeholder="Escriba para buscar..."
+        >
+      </div>
+    </div>
+
+    <div class="actions">
+      <button onclick="buscarProductos()">Buscar</button>
+      <button class="btn-warning" onclick="limpiarBusqueda()">Limpiar</button>
+    </div>
+
+    <div id="msgBuscar" class="hint" style="margin-top:12px;">
+      Ingrese un texto para buscar
+    </div>
+  </div>
+
+  <div class="card">
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Categoría</th>
+          <th>Stock</th>
+          <th>Costo Unit.</th>
+        </tr>
+      </thead>
+      <tbody id="tablaBuscar">
+        <!-- resultados -->
+      </tbody>
+    </table>
+  </div>
+</section>
+  </main>
+</div>
+
+
+
+
+
+<script>
+/* =====================
+   UTILIDADES
+===================== */
+function setMsg(el, type, text){
+  if (!el) return;
+  el.className = type;
+  el.textContent = text || '';
+}
+
+/* =====================
+   NAVEGACIÓN
+===================== */
+function mostrar(sec){
+  const secciones = [
+    'dashboard',
+    'productos',
+    'movimientos',
+    'reportes',
+    'inventario',
+    'buscar'
+  ];
+
+  const menus = [
+    'mDashboard',
+    'mProductos',
+    'mMovimientos',
+    'mReportes',
+    'mInventario',
+    'mBuscar'
+  ];
+
+  // mostrar / ocultar secciones
+  secciones.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = (id === sec) ? 'block' : 'none';
+  });
+
+  // activar menú
+  menus.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+
+  const menuActivo = document.getElementById(
+    'm' + sec.charAt(0).toUpperCase() + sec.slice(1)
+  );
+  if (menuActivo) menuActivo.classList.add('active');
+
+  if (sec === 'movimientos') cargarProductosEnSelects();
+  if (sec === 'dashboard') cargarDashboard();
+  if (sec === 'inventario') cargarInventario();
+  if (sec === 'buscar') limpiarBusqueda();
+
+}
+
+/* =====================
+   STUBS GENERALES
+===================== */
+function guardarProducto() {
+  const id = document.getElementById('p_id').value.trim();
+  const nombre = document.getElementById('p_nombre').value.trim();
+  const categoria = document.getElementById('p_categoria').value;
+  const costo = Number(document.getElementById('p_costo').value);
+
+  const msg = document.getElementById('msgProd');
+
+  if (!id || !nombre || !categoria) {
+    setMsg(msg, 'error', 'Completá todos los campos');
+    return;
+  }
+
+  if (!isFinite(costo) || costo < 0) {
+    setMsg(msg, 'error', 'Costo inválido');
+    return;
+  }
+
+  setMsg(msg, 'hint', 'Guardando producto...');
+
+  google.script.run
+    .withSuccessHandler(() => {
+      setMsg(msg, 'ok', 'Producto guardado correctamente');
+
+      // limpiar formulario
+      document.getElementById('p_id').value = '';
+      document.getElementById('p_nombre').value = '';
+      document.getElementById('p_categoria').value = '';
+      document.getElementById('p_costo').value = '';
+
+      // 🔥 refrescar todos los selects dependientes
+      cargarProductosEnSelects();
+    })
+    .withFailureHandler(err => {
+      setMsg(msg, 'error', err.message);
+    })
+    .agregarProducto({
+      id,
+      nombre,
+      categoria,
+      costo
+    });
+}
+/************ ACTUALIZAR COSTO (FRONT) ************/
+function actualizarCosto() {
+  const producto = document.getElementById('c_producto').value;
+  const nuevoCosto = Number(document.getElementById('c_nuevoCosto').value);
+  const msg = document.getElementById('msgCosto');
+
+  if (!producto) {
+    setMsg(msg, 'error', 'Seleccioná un producto');
+    return;
+  }
+
+  if (!isFinite(nuevoCosto) || nuevoCosto < 0) {
+    setMsg(msg, 'error', 'Costo inválido');
+    return;
+  }
+
+  setMsg(msg, 'hint', 'Actualizando costo...');
+
+  google.script.run
+    .withSuccessHandler(() => {
+      setMsg(msg, 'ok', 'Costo actualizado correctamente');
+      document.getElementById('c_nuevoCosto').value = '';
+      cargarInventario();
+      cargarDashboard();
+    })
+    .withFailureHandler(err => {
+      setMsg(msg, 'error', err?.message || err);
+    })
+    .actualizarCosto({
+      idProducto: producto,
+      nuevoCosto
+    });
+}
+
+function guardarMovimiento() {
+  const btn = document.querySelector('#movimientos button[onclick="guardarMovimiento()"]');
+  const msg = document.getElementById('msgMov');
+
+  const data = {
+    fecha: document.getElementById('m_fecha')?.value,
+    mate: document.getElementById('m_mate')?.value || '',
+    bombilla: document.getElementById('m_bombilla')?.value || '',
+    yerba: document.getElementById('m_yerba')?.value || '',
+    accesorio: document.getElementById('m_accesorio')?.value || '',
+    grabado: document.getElementById('m_grabado')?.value || 'NO',
+    tipo: document.getElementById('m_tipo')?.value,
+    monto: Number(document.getElementById('m_monto')?.value),
+    persona: document.getElementById('m_persona')?.value,
+    obs: document.getElementById('m_obs')?.value || ''
+  };
+
+  // validaciones mínimas FRONT
+  if (!data.fecha) {
+    setMsg(msg, 'error', 'La fecha es obligatoria');
+    return;
+  }
+
+  if (!isFinite(data.monto) || data.monto === 0) {
+    setMsg(msg, 'error', 'El monto es inválido');
+    return;
+  }
+
+  if (!data.persona) {
+    setMsg(msg, 'error', 'La persona es obligatoria');
+    return;
+  }
+
+ setMsg(msg, 'hint', 'Guardando movimiento...');
+if (btn) btn.disabled = true;
+
+google.script.run
+  .withSuccessHandler(() => {
+    setMsg(msg, 'ok', 'Movimiento guardado correctamente');
+
+    // limpiar campos
+    document.getElementById('m_monto').value = '';
+    document.getElementById('m_persona').value = '';
+    document.getElementById('m_obs').value = '';
+    document.getElementById('m_fecha').value = '';
+    document.getElementById('m_mate').value = '';
+    document.getElementById('m_bombilla').value = '';
+    document.getElementById('m_yerba').value = '';
+    document.getElementById('m_accesorio').value = '';
+
+    if (btn) btn.disabled = false; // ✅ acá
+  })
+  .withFailureHandler(err => {
+    setMsg(msg, 'error', (err && err.message) ? err.message : String(err));
+    if (btn) btn.disabled = false; // ✅ y acá
+  })
+  .guardarMovimiento(data);
+
+}
+
+function mostrarHistorial()  {
+
+  const filtro = {
+    desde: document.getElementById('fechaDesde').value,
+    hasta: document.getElementById('fechaHasta').value,
+    persona: document.getElementById('filtroPersona').value.trim(),
+    mate: document.getElementById('filtroMate').value.trim(),
+    bombilla: document.getElementById('filtroBombilla').value.trim(),
+    yerba: document.getElementById('filtroYerba').value.trim(),
+    accesorio: document.getElementById('filtroAccesorio').value.trim()
+  };
+
+  const tabla = document.getElementById('historialTable');
+  const resumen = document.getElementById('historialResumen');
+
+  tabla.innerHTML = '';
+  resumen.textContent = 'Cargando movimientos...';
+
+  google.script.run
+    .withSuccessHandler(rows => {
+  if (!Array.isArray(rows)) {
+    resumen.textContent = 'Error: respuesta inválida del servidor';
+    return;
+  }
+
+      let total = 0;
+
+      tabla.innerHTML = rows.map(m => {
+
+       const monto = Number(m.monto) || 0;
+if (m.tipo === 'Ingreso') total += monto;
+if (m.tipo === 'Egreso') total -= monto;
+
+        return `
+          <tr>
+            <td>${m.id}</td>
+            <td>${ m.fecha && !isNaN(new Date(m.fecha)) ? new Date(m.fecha).toLocaleDateString()   : '-'}</td>
+            <td>${m.mate || '-'}</td>
+            <td>${m.bombilla || '-'}</td>
+            <td>${m.yerba || '-'}</td>
+            <td>${m.accesorio || '-'}</td>
+            <td>${m.grabado || '-'}</td>
+            <td>${m.tipo}</td>
+            <td>$ ${(Number(m.monto) || 0).toFixed(2)}</td>
+            <td>${m.obs || '-'}</td>
+            <td>${m.persona || '-'}</td>
+          </tr>
+        `;
+      }).join('');
+
+      resumen.textContent =
+        `Se encontraron ${rows.length} movimiento(s). Total neto: $ ${total.toFixed(2)}`;
+    })
+    .withFailureHandler(err => {
+      resumen.textContent = 'Error: ' + (err?.message || err);
+    })
+    .getMovimientos(filtro);
+}
+
+
+
+
+
+function exportarReporte(){
+  const filtro = {
+    desde: document.getElementById('fechaDesde').value,
+    hasta: document.getElementById('fechaHasta').value,
+    persona: document.getElementById('filtroPersona').value.trim(),
+    mate: document.getElementById('filtroMate').value.trim(),
+    bombilla: document.getElementById('filtroBombilla').value.trim(),
+    yerba: document.getElementById('filtroYerba').value.trim(),
+    accesorio: document.getElementById('filtroAccesorio').value.trim()
+  };
+
+  google.script.run
+    .withSuccessHandler(csv => {
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'movimientos.csv';
+      a.click();
+
+      URL.revokeObjectURL(url);
+    })
+    .withFailureHandler(err => {
+      alert(err.message || err);
+    })
+    .exportarMovimientosCSV(filtro);
+}
+
+function cargarInventario() {
+  const tabla = document.getElementById('tablaInventario');
+  const resumen = document.getElementById('invResumen');
+
+  resumen.textContent = 'Cargando inventario...';
+  tabla.innerHTML = '';
+
+  google.script.run
+    .withSuccessHandler(productos => {
+
+      if (!Array.isArray(productos) || productos.length === 0) {
+        resumen.textContent = 'No hay productos cargados.';
+        return;
+      }
+
+      let total = 0;
+
+      tabla.innerHTML = productos.map(p => {
+        total += p.stock * p.costo;
+        return `
+          <tr>
+            <td>${p.id}</td>
+            <td>${p.nombre}</td>
+            <td>${p.categoria}</td>
+            <td>${p.stock}</td>
+            <td>$ ${p.costo.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</td>
+          </tr>
+        `;
+      }).join('');
+
+      resumen.textContent =
+        `Productos: ${productos.length} · Valor total inventario: $ ${total.toLocaleString('es-AR', { minimumFractionDigits: 2 })}`;
+    })
+    .withFailureHandler(err => {
+      resumen.textContent = 'Error: ' + (err.message || err);
+    })
+    .getInventario();
+}
+
+/* =====================
+   BUSCAR PRODUCTOS
+   (FRONTEND MOCK)
+===================== */
+function buscarProductos(){
+  const input = document.getElementById('buscarInput');
+  const tabla = document.getElementById('tablaBuscar');
+  const msg = document.getElementById('msgBuscar');
+
+  const texto = input.value.trim();
+
+  if (!texto) {
+    tabla.innerHTML = '';
+    msg.textContent = 'Ingrese un texto para buscar';
+    return;
+  }
+
+  msg.textContent = 'Buscando...';
+  tabla.innerHTML = '';
+
+  google.script.run
+    .withSuccessHandler(rows => {
+      if (!rows.length) {
+        msg.textContent = 'No se encontraron resultados';
+        return;
+      }
+
+      tabla.innerHTML = rows.map(p => `
+        <tr>
+          <td>${p.id}</td>
+          <td>${p.nombre}</td>
+          <td>${p.categoria}</td>
+          <td>${p.stock}</td>
+          <td>$ ${Number(p.costo).toLocaleString('es-AR', {minimumFractionDigits:2})}</td>
+        </tr>
+      `).join('');
+
+      msg.textContent = `Se encontraron ${rows.length} resultado(s)`;
+    })
+    .withFailureHandler(err => {
+      msg.textContent = 'Error: ' + err.message;
+    })
+    .buscarProductosBackend(texto);
+}
+
+
+
+
+function limpiarBusqueda(){
+  const input = document.getElementById('buscarInput');
+  const tabla = document.getElementById('tablaBuscar');
+  const msg = document.getElementById('msgBuscar');
+
+  if (input) input.value = '';
+  if (tabla) tabla.innerHTML = '';
+  if (msg) msg.textContent = 'Ingrese un texto para buscar';
+}
+/* =====================
+   REGISTRAR GASTO
+   (MONTO SIEMPRE NEGATIVO)
+===================== */
+function registrarGasto() {
+  const fecha = document.getElementById('g_fecha').value;
+  const monto = document.getElementById('g_monto').value;
+  const msg = document.getElementById('msgGasto');
+
+  if (!fecha) {
+    setMsg(msg, 'error', 'La fecha es obligatoria');
+    return;
+  }
+
+  if (!monto || Number(monto) <= 0) {
+    setMsg(msg, 'error', 'Monto inválido');
+    return;
+  }
+
+  setMsg(msg, 'hint', 'Guardando gasto...');
+
+  google.script.run
+    .withSuccessHandler(() => {
+      setMsg(msg, 'ok', 'Gasto registrado correctamente');
+      document.getElementById('g_monto').value = '';
+    })
+    .withFailureHandler(err => {
+      setMsg(msg, 'error', err.message || err);
+    })
+    .registrarGasto({
+      fecha,
+      monto
+    });
+}
+
+
+
+function parseFechaSeguro(valor) {
+  const d = new Date(valor);
+  if (isNaN(d.getTime())) throw new Error('FECHA inválida');
+  return d;
+}
+
+
+
+
+function fmtMoney(n){
+  const num = Number(n || 0);
+  return '$ ' + num.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function fmtPct(n){
+  const num = Number(n || 0);
+  return num.toFixed(2) + '%';
+}
+
+function setText(id, value){
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+
+function cargarDashboard(){
+  const msg = document.getElementById('msgDash');
+  setMsg(msg, 'hint', 'Cargando dashboard...');
+
+  const desde = document.getElementById('dashDesde')?.value || '';
+  const hasta = document.getElementById('dashHasta')?.value || '';
+
+  google.script.run
+    .withSuccessHandler(data => {
+      setText('k_totalProductos', data.totalProductos ?? 0);
+      setText('k_totalMovimientos', data.totalMovimientos ?? 0);
+      setText('k_sinStock', data.sinStock ?? 0);
+      setText('k_stockBajo', data.stockBajo ?? 0);
+
+      setText('k_valorInventario', fmtMoney(data.valorInventario));
+      setText('k_ingresosMes', fmtMoney(data.ingresosMes));
+      setText('k_costoVentaMes', fmtMoney(data.costoVentaMes));
+      setText('k_utilidadBrutaMes', fmtMoney(data.utilidadBrutaMes));
+
+      setText('k_margenBruto', fmtPct(data.margenBruto));
+      setText('a_ingresos', fmtMoney(data.ingresosMes));
+      setText('a_costos', fmtMoney(data.costoVentaMes));
+      setText('a_utilidad', fmtMoney(data.utilidadBrutaMes));
+
+      setText('a_valor', fmtMoney(data.valorInventario));
+      setText('a_productos', data.totalProductos ?? 0);
+      setText('a_movimientos', data.totalMovimientos ?? 0);
+
+      setMsg(msg, 'ok', 'Dashboard actualizado.');
+    })
+    .withFailureHandler(err => {
+      setMsg(msg, 'error', 'Error: ' + (err?.message || err));
+    })
+    .getDashboardData({ desde, hasta });
+}
+
+
+function cargarProductosEnSelects() {
+  google.script.run
+    .withSuccessHandler(productos => {
+      // selects
+      const cProd = document.getElementById('c_producto');     // actualizar costo
+      const sProd = document.getElementById('s_producto');     // ajustar stock
+
+      const mMate = document.getElementById('m_mate');         // movimientos
+      const mBomb = document.getElementById('m_bombilla');
+      const mYerba = document.getElementById('m_yerba');
+      const mAcc = document.getElementById('m_accesorio');
+
+      // helper para resetear
+      function resetSelect(sel, placeholder) {
+        if (!sel) return;
+        sel.innerHTML = `<option value="">${placeholder}</option>`;
+      }
+
+      // reset general
+      resetSelect(cProd, 'Seleccionar');
+      resetSelect(sProd, 'Seleccionar');
+
+      resetSelect(mMate, '(vacío)');
+      resetSelect(mBomb, '(vacío)');
+      resetSelect(mYerba, '(vacío)');
+      resetSelect(mAcc, '(vacío)');
+
+      // cargar c_producto y s_producto con TODOS
+      productos.forEach(p => {
+        const label = `${p.id} - ${p.nombre}`;
+
+        if (cProd) {
+          const opt = document.createElement('option');
+          opt.value = p.id;
+          opt.textContent = label;
+          cProd.appendChild(opt);
+        }
+
+        if (sProd) {
+          const opt = document.createElement('option');
+          opt.value = p.id;
+          opt.textContent = label;
+          sProd.appendChild(opt);
+        }
+      });
+
+      // helper para agregar en selects por categoría
+      function addTo(sel, p) {
+        if (!sel) return;
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = `${p.id} - ${p.nombre}`;
+        sel.appendChild(opt);
+      }
+
+      // llenar los 4 selects filtrando por categoria
+      productos.forEach(p => {
+        const cat = String(p.categoria || '').trim().toLowerCase();
+
+        if (cat === 'mate') addTo(mMate, p);
+        if (cat === 'bombilla') addTo(mBomb, p);
+        if (cat === 'yerba') addTo(mYerba, p);
+        if (cat === 'accesorio') addTo(mAcc, p);
+      });
+    })
+    .withFailureHandler(err => {
+      console.error('Error cargando productos en selects:', err);
+      // opcional: mostrar un mensaje en UI si querés
+    })
+    .getProductos();
+}
+function ajustarStock() {
+  const producto = document.getElementById('s_producto').value;
+  const cantidad = Number(document.getElementById('s_cantidad').value);
+  const msg = document.getElementById('msgStock');
+
+  if (!producto) {
+    setMsg(msg, 'error', 'Seleccioná un producto');
+    return;
+  }
+
+  if (!Number.isInteger(cantidad) || cantidad === 0) {
+    setMsg(msg, 'error', 'Cantidad inválida');
+    return;
+  }
+
+  setMsg(msg, 'hint', 'Aplicando ajuste...');
+
+  google.script.run
+    .withSuccessHandler(() => {
+      setMsg(msg, 'ok', 'Stock actualizado correctamente');
+      document.getElementById('s_cantidad').value = '';
+      cargarInventario();
+      cargarDashboard();
+    })
+    .withFailureHandler(err => {
+      setMsg(msg, 'error', err.message);
+    })
+    .ajustarStock({
+      idProducto: producto,
+      cantidad
+    });
+}
+
+
+
+/* =====================
+   INIT
+===================== */
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  mostrar('productos');
+  cargarProductosEnSelects();
+});
+
+
+
+
+</script>
+</body>
+</html>
+
