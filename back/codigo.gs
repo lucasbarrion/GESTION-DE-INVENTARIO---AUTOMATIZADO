@@ -3,7 +3,7 @@ const CONFIG = {
   SHEET_MOVIMIENTOS: 'MOVIMIENTOS',
   SHEET_GASTOS: 'GASTOS PROOVEDOR',
   CATEGORIAS: ['Mate', 'Bombilla', 'Yerba', 'Accesorio'],
-  LOGO_FILE_ID: '1hFfH5zLT2I9mnAWrsMxeul3xOweaQo8FJGn11SIlQWE',
+  LOGO_FILE_ID: 'inserte url de tu hoja de sheets',
   STOCK_BAJO_UMBRAL: 3
 };
 
